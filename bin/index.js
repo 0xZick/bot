@@ -17,6 +17,10 @@ const route = (name, params, handler) => (req, res) => {
     })
   }
 
+  if (typeof handler === 'function') {
+    console.error('route: handler is not a functions')
+  }
+
   handler(req.query)
     .then(info => {
       console.log('[SERVER] 200 Success', info);

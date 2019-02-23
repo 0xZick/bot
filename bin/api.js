@@ -44,8 +44,6 @@ const postRequest = (url, params) => {
 const getRequest = (url, params) => {
   const path = params ? `${url}${getString(params)}` : url;
 
-  console.log('path', `${baseUrl}${path}`);
-
   const options = {
     url: `${baseUrl}${path}`,
     headers: {
