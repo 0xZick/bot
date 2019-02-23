@@ -1,0 +1,25 @@
+{
+  "name": "bot",
+  "version": "0.0.1",
+  "description": "trade bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node ./bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikdementev/bot.git"
+  },
+  "author": "nikdementev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nikdementev/bot/issues"
+  },
+  "homepage": "https://github.com/nikdementev/bot#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "request": "^2.88.0"
+  }
+}
