@@ -1,9 +1,13 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-const { postRequest, getRequest } = require('./api');
+const {
+  postRequest, getRequest, getFakeRequest, getDepositAddress,
+  parsedMarket, parsedCoins, parsedWallet, parsedPairs
+} = require('./api');
 
 
 const route = (name, params, handler) => (req, res) => {
@@ -17,14 +21,27 @@ const route = (name, params, handler) => (req, res) => {
     })
   }
 
-  if (typeof handler === 'function') {
-    console.error('route: handler is not a functions')
-  }
-
   handler(req.query)
-    .then(info => {
-      console.log('[SERVER] 200 Success', info);
-      return res.json(JSON.parse(info))
+    .then((info) => {
+      const response = JSON.parse(info);
+
+      console.log('[SERVER] 200 Success', name);
+      switch (name) {
+        case 'markets':
+          return res.json(parsedMarket(response.result));
+
+        case 'deposit':
+          return res.json(response);
+
+        case 'pairs':
+          return res.json(parsedPairs());
+
+        case 'coins':
+          return res.json(parsedCoins());
+
+        case 'wallets':
+          return res.json(parsedWallet());
+      }
     })
     .catch(err => {
       console.error('[SERVER] 500 Error', err.message);
@@ -32,7 +49,7 @@ const route = (name, params, handler) => (req, res) => {
     })
 };
 
-
+app.use(cors());
 
 app.use(express.static('web'));
 
@@ -70,11 +87,17 @@ app.get('/deals', route('deals', ['orderId', 'offset', 'limit'], ({ orderId, off
 
 app.get('/markets', route('markets', [], () => getRequest('/api/v1/public/markets')));
 
+app.get('/wallets', route('wallets', [], () => getFakeRequest()));
+
+app.get('/coins', route('coins', [], () => getFakeRequest()));
+
+app.get('/pairs', route('pairs', [], () => getFakeRequest()));
+
 app.get('/tickers', route('tickers', [], () => getRequest('/api/v1/public/tickers')));
 
 app.get('/products', route('products', [], () => getRequest('/api/v1/public/products')));
 
-app.get('/symbols', route('symbols', [], () => getRequest('/api/v1/public/symbols')));
+app.get('/deposit', route('deposit', ['coin'], ({ coin }) => getDepositAddress(coin)));
 
 app.get('/ticker', route('ticker', ['market'], ({ market }) => {
   return getRequest('/api/v1/public/ticker', { market })
@@ -95,6 +118,5 @@ app.get('/history-result', route('history-result', ['market', 'since', 'limit'],
 app.get('/depth', route('depth', ['market', 'limit'], ({ market, limit }) => {
   return getRequest('/api/v1/public/depth/result', { market, limit })
 }));
-
 
 app.listen(port, () => console.log(`[SERVER] listening on port ${port}`));
