@@ -263,16 +263,18 @@ const getDepositAddress = (coin) => {
   return new Promise((resolve) => {
     switch(coin.toUpperCase()) {
       case 'ETH':
-        return resolve(JSON.stringify({ address: '' }));
+        return resolve(JSON.stringify({ address: '0x59B1a7cF9725b916Dc2F514C0640833160Bf1A20' }));
 
       case 'BTC':
-        return resolve(JSON.stringify({ address: '' }));
+        return resolve(JSON.stringify({ address: '32GSzAdKSreaEXV5JmTp6Vq1CQuyPSrJiU' }));
 
       case 'EDR':
-        return resolve(JSON.stringify({ address: '' }));
+        return resolve(JSON.stringify({ address: 'p2pb2b.wallet' }));
     }
   });
 };
+
+// your memo fc1bca59-2b9b-4380-b713-f29d896ccb22
 
 module.exports = {
   getDepositAddress,
