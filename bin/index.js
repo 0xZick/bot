@@ -24,6 +24,7 @@ const route = (name, params, handler) => (req, res) => {
   handler(req.query)
     .then((info) => {
       const response = JSON.parse(info);
+      console.log('response', response);
 
       console.log('[SERVER] 200 Success', name);
       switch (name) {
@@ -41,7 +42,11 @@ const route = (name, params, handler) => (req, res) => {
 
         case 'wallets':
           return res.json(parsedWallet());
+
+        case 'switch':
+          return res.json(response)
       }
+      return res.json(response)
     })
     .catch(err => {
       console.error('[SERVER] 500 Error', err.message);
@@ -63,13 +68,18 @@ app.get('/get-balances', route('get-balance', [], () => {
   return postRequest('/api/v1/account/balances')
 }));
 
-app.get('/new-order', route('new-order', ['market', 'side', 'amount', 'price'], ({ market, side, amount, price }) => {
-  return postRequest('/api/v1/order/new', { market, side, amount, price })
+app.get('/new-order', route('new-order', [], () => {
+  return postRequest('/api/v1/order/new', { market: 'EDR_ETH', side: 'buy', amount: '100', price: '0.00005784' })
 }));
 
-app.get('/cancel-order', route('cancel-order', ['market', 'orderId'], ({ market, orderId }) => {
-  return postRequest('/api/v1/order/cancel', { market, orderId })
+app.get('/cancel-order', route('cancel-order', [], () => {
+  return postRequest('/api/v1/order/cancel', { market: 'EDT_ETH', orderId: '8947572,' })
 }));
+
+// "market": "ETH_BTC",
+//   "side": "buy",
+//   "amount": "0.001",
+//   "price": "1000",
 
 app.get('/un-executed-orders', route('un-executed-orders', ['market', 'offset', 'limit'], ({ market, offset, limit }) => {
   return postRequest('/api/v1/orders', { market, offset, limit })
@@ -96,6 +106,10 @@ app.get('/pairs', route('pairs', [], () => getFakeRequest()));
 app.get('/tickers', route('tickers', [], () => getRequest('/api/v1/public/tickers')));
 
 app.get('/products', route('products', [], () => getRequest('/api/v1/public/products')));
+
+app.get('/switch', route('switch', [], () => {
+  return postRequest('/v2/profile/transfer', { amount: '100', transfer_method: 'deposit', ticker: 'EDR' })
+}));
 
 app.get('/deposit', route('deposit', ['coin'], ({ coin }) => getDepositAddress(coin)));
 

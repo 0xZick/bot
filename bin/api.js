@@ -14,11 +14,12 @@ const postRequest = (url, params) => {
     nonce: Date.now(),
   };
 
+  console.log('data', data);
+
   const stringData = JSON.stringify(data);
 
   const completeURL = `${baseUrl}${url}`;
-  const payload = new Buffer(stringData)
-    .toString('base64');
+  const payload = Buffer.from(stringData, 'base64');
 
   const signature = crypto
     .createHmac('sha512', apiSecret)
