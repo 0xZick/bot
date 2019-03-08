@@ -104,6 +104,7 @@ app.get('/coins', route('coins', [], () => getFakeRequest()));
 app.get('/pairs', route('pairs', [], () => getFakeRequest()));
 
 app.get('/tickers', route('tickers', [], () => getRequest('/api/v1/public/tickers')));
+// https://api.alterdice.com/api/default/ticker
 
 app.get('/products', route('products', [], () => getRequest('/api/v1/public/products')));
 
@@ -112,6 +113,7 @@ app.get('/switch', route('switch', [], () => {
 }));
 
 app.get('/deposit', route('deposit', ['coin'], ({ coin }) => getDepositAddress(coin)));
+// https://api.alterdice.com/api/deposit/get-address {"iso":"BTC","new":0,"p":1,"request_id":"1551898011531996"}
 
 app.get('/ticker', route('ticker', ['market'], ({ market }) => {
   return getRequest('/api/v1/public/ticker', { market })

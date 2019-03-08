@@ -19,8 +19,8 @@ const postRequest = (url, params) => {
   const stringData = JSON.stringify(data);
 
   const completeURL = `${baseUrl}${url}`;
-  const payload = Buffer.from(stringData, 'base64');
 
+  const payload = Buffer.from(stringData, 'base64');
   const signature = crypto
     .createHmac('sha512', apiSecret)
     .update(payload)
