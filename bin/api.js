@@ -14,8 +14,6 @@ const postRequest = (url, params) => {
     nonce: Date.now(),
   };
 
-  console.log('data', data);
-
   const stringData = JSON.stringify(data);
 
   const completeURL = `${baseUrl}${url}`;
