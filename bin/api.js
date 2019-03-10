@@ -115,7 +115,7 @@ const parsedPairs = () => [
 ];
 
 const getFakeRequest = () => {
-  return new Promise((resolve) => resolve(JSON.stringify({ status: '200' })));
+  return new Promise((resolve) => resolve(JSON.stringify({ status: '202' })));
 };
 
 const parsedCoins = () => [
