@@ -72,6 +72,10 @@ app.get('/new-order', route('new-order', [], () => {
   return postRequest('/api/v1/order/new', { market: 'EDR_ETH', side: 'buy', amount: '100', price: '0.00005784' })
 }));
 
+app.get('/new-order-sell', route('new-order', [], () => {
+  return postRequest('/api/v1/order/new', { market: 'EDR_ETH', side: 'sell', amount: '1000', price: '0.00005784' })
+}));
+
 app.get('/cancel-order', route('cancel-order', [], () => {
   return postRequest('/api/v1/order/cancel', { market: 'EDT_ETH', orderId: '8947572,' })
 }));

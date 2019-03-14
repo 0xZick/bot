@@ -1,8 +1,8 @@
 const request = require('request');
 const crypto = require('crypto');
 
-const apiKey = '1c5ac9cd1a96fa3aa1a6025f33e601ab';
-const apiSecret = '47afe7d75150b5cd5bd4b1790e0170c9';
+const apiKey = 'a822f678dbc9ca42ef2651730bbc06b1';
+const apiSecret = '0b5b967cd3be66177d25ac3a193c841e';
 
 const baseUrl = 'https://p2pb2b.io';
 
@@ -17,8 +17,9 @@ const postRequest = (url, params) => {
   const stringData = JSON.stringify(data);
 
   const completeURL = `${baseUrl}${url}`;
+  const payload = new Buffer(stringData)
+    .toString('base64')
 
-  const payload = Buffer.from(stringData, 'base64');
   const signature = crypto
     .createHmac('sha512', apiSecret)
     .update(payload)
