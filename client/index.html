@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>EDR</h1>
+        <button onclick="getDeposit('EDR')">Получить адресс</button>
+        <p>Пополните этот адресс: <b id="deposit"></b></p>
+        <button onclick="getBalance('EDR')">Обновить баланс</button>
+        <p>Ваш баланс: <b id="balance"></b></p>
+        <button onclick="createOrder('buy')">Продать</button>
+    </div>
+    <div>
+        <h1>ETH</h1>
+        <button onclick="getDeposit('ETH')">Получить адресс</button>
+        <button onclick="getBalance('ETH')">Обновить баланс</button>
+        <button onclick="createOrder('sell')">Купить</button>
+        </div>
+    <script src="lib.js"></script>
+</body>
+</html>
