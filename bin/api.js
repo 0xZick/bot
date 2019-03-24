@@ -72,7 +72,7 @@ const parsedMarket = (market) => {
     .filter(item => item.stock === 'EDR')
     .map(item => {
       const img   = `/assets/${item.stock.toLowerCase()}.png`;
-      const base  = `${item.stock}`; // change edr to base
+      const base  = `${item.stock}`;
       const quote = `EDR.${item.money}`;
       const id    = `${quote}_${base}`;
 
