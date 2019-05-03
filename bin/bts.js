@@ -15,9 +15,8 @@ let keyPair = PrivateKey.fromWif(privateKey);
 const init = () => {
   return new Promise(resolve => {
     return Apis.instance("wss://node.testnet.bitshares.eu", true)
-    .init_promise.then((res) => {
-      console.log("connected to:", res[0].network_name, "network");
-      
+    .init_promise.then(() => {
+ 
       ChainStore.init().then(() => {
         
         let fromAccount = "bitsharesjs";
@@ -38,12 +37,10 @@ const init = () => {
           FetchChain("getAsset", sendAmount.asset),
           FetchChain("getAsset", sendAmount.asset)
         ]).then((res)=> {
-          // console.log("got data:", res);
           let [fromAccount, toAccount, memoSender, sendAsset, feeAsset] = res;
           
           // Memos are optional, but if you have one you need to encrypt it here
           let memoFromKey = memoSender.getIn(["options","memo_key"]);
-          console.log("memo pub key:", memoFromKey);
           let memoToKey = toAccount.getIn(["options","memo_key"]);
           let nonce = TransactionHelper.unique_nonce_uint64();
           
