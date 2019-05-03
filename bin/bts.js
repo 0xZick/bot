@@ -91,9 +91,24 @@ const nodeLoger = () => {
   }
 }
 
+const accountHistory = (name = 'nikita') => new Promise(resolve =>
+  Apis.instance("wss://node.testnet.bitshares.eu/", true)
+    .init_promise.then((res) => {
+      console.log("connected to:", res[0].network_name, "network")
+    
+      return Apis.instance().db_api().exec( "get_account_history", [name, 100] )
+    }).then((res) => {
+      // how do I get transaction hash here?
+      console.log(res)
+      resolve(res)
+    }).catch(error => {
+      console.log('err', error)
+    })
+  )
+
 module.exports = {
-  lookupAccounts,
   nodeLoger,
+  accountHistory,
   transfer,
   generateKeyPair,
 }

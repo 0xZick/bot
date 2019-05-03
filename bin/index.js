@@ -10,6 +10,7 @@ const {
 } = require('./api');
 
 const {
+  accountHistory,
   nodeLoger,
   transfer,
   generateKeyPair
@@ -66,6 +67,10 @@ app.use(cors());
 app.use(express.static('web'));
 
 // bts node
+
+app.get('/getTx', route('get-tx', ['name'], (name) => {
+  return accountHistory(name)
+}));
 
 app.get('/transfer', route('transfer', ['from', 'to', 'amount', 'asset'], (from, to, amount, asset) => {
   return transfer(from, to, amount, asset)
