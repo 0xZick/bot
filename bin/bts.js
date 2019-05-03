@@ -3,76 +3,74 @@ const {
   ChainStore,
   FetchChain,
   PrivateKey,
+  key,
   TransactionHelper,
   Aes,
   TransactionBuilder
 } = require('bitsharesjs')
 
+const random = require('random-words')
+
+
+
+/**
+ *
+ * @param
+ * @return keyPair <Promise>{object}
+ */
+const generateKeyPair = () => {
+  const keyPair = PrivateKey.fromSeed(
+    key.normalize_brainKey(
+      random(12).join('')
+    )
+  )
+  
+  return new Promise((resolve) => resolve(
+    JSON.stringify({
+      publicKey: keyPair.toPublicKey().toString(),
+      privateKey: keyPair.toWif()
+    })
+  ))
+}
+
+
+// TODO move to .env
 const privateKey = '5KBuq5WmHvgePmB7w3onYsqLM8ESomM2Ae7SigYuuwg8MDHW7NN'
-let keyPair = PrivateKey.fromWif(privateKey);
+const keyPair = PrivateKey.fromWif(privateKey);
 
 
-const init = () => {
+const transfer = (from, to, amount, asset) => {
   return new Promise(resolve => {
     return Apis.instance("wss://node.testnet.bitshares.eu", true)
     .init_promise.then(() => {
- 
+      
       ChainStore.init().then(() => {
-        
-        let fromAccount = "bitsharesjs";
-        let memoSender = fromAccount;
-        let memo = "Testing transfer from node.js";
-        
-        let toAccount = "faucet";
-        
-        let sendAmount = {
-          amount: 10000,
-          asset: "TEST"
-        }
-        
         Promise.all([
-          FetchChain("getAccount", fromAccount),
-          FetchChain("getAccount", toAccount),
-          FetchChain("getAccount", memoSender),
-          FetchChain("getAsset", sendAmount.asset),
-          FetchChain("getAsset", sendAmount.asset)
+          FetchChain("getAccount", from),
+          FetchChain("getAccount", to),
+          FetchChain("getAsset", asset),
+          FetchChain("getAsset", asset)
         ]).then((res)=> {
-          let [fromAccount, toAccount, memoSender, sendAsset, feeAsset] = res;
+          const [ fromAccount, toAccount, memoSender, sendAsset, feeAsset ] = res;
+          console.log('ChainStore init', res)
           
-          // Memos are optional, but if you have one you need to encrypt it here
-          let memoFromKey = memoSender.getIn(["options","memo_key"]);
-          let memoToKey = toAccount.getIn(["options","memo_key"]);
-          let nonce = TransactionHelper.unique_nonce_uint64();
           
-          let memo_object = {
-            from: memoFromKey,
-            to: memoToKey,
-            nonce,
-            message: Aes.encrypt_with_checksum(
-              pKey,
-              memoToKey,
-              nonce,
-              memo
-            )
-          }
-          
-          let tr = new TransactionBuilder()
-          
-          tr.add_type_operation( "transfer", {
+          const tx = new TransactionBuilder()
+  
+          tx.add_type_operation( "transfer", {
             fee: {
               amount: 0,
               asset_id: feeAsset.get("id")
             },
             from: fromAccount.get("id"),
             to: toAccount.get("id"),
-            amount: { amount: sendAmount.amount, asset_id: sendAsset.get("id") },
-            memo: memo_object
-          } )
-          
-          tr.set_required_fees().then(() => {
-            tr.add_signer(pKey, pKey.toPublicKey().toPublicKeyString());
-            console.log("serialized transaction:", tr.serialize());
-            tr.broadcast();
+            amount: { amount, asset_id: sendAsset.get("id") },
+          })
+  
+          tx.set_required_fees().then(() => {
+            tx.add_signer(keyPair, keyPair.toPublicKey().toPublicKeyString());
+            console.log("serialized transaction:", tx.serialize());
+            tx.broadcast();
           })
         });
       });
@@ -80,6 +78,22 @@ const init = () => {
   })
 }
 
+const nodeLoger = () => {
+  Apis.instance("wss://node.testnet.bitshares.eu", true).init_promise.then(res => {
+    console.log("connected to:", res[0].network);
+    ChainStore.init(false).then(() => {
+      ChainStore.subscribe(log)
+    });
+  });
+  
+  function log(object) {
+    console.log("ChainStore object update", ChainStore.getObject("2.1.0"));
+  }
+}
+
 module.exports = {
-  init,
+  lookupAccounts,
+  nodeLoger,
+  transfer,
+  generateKeyPair,
 }

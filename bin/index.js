@@ -9,6 +9,13 @@ const {
   parsedMarket, parsedCoins, parsedWallet, parsedPairs
 } = require('./api');
 
+const {
+  nodeLoger,
+  transfer,
+  lookupAccounts,
+  generateKeyPair
+} = require('./bts')
+
 
 const route = (name, params, handler) => (req, res) => {
   const paramsValid = params.reduce((acc, param) => acc && req.query[param], true);
@@ -42,6 +49,7 @@ const route = (name, params, handler) => (req, res) => {
 
         case 'wallets':
           return res.json(parsedWallet());
+          
 
         case 'switch':
           return res.json(response)
@@ -59,6 +67,18 @@ app.use(cors());
 app.use(express.static('web'));
 
 // private
+
+app.get('/transfer', route('transfer', ['from', 'to', 'amount', 'asset'], (from, to, amount, asset) => {
+  return transfer(from, to, amount, asset)
+}));
+
+app.get('/update', route('update', [], () => {
+  return nodeLoger()
+}));
+
+app.get('/generate', route('generate-key', [], () => {
+  return generateKeyPair()
+}));
 
 app.get('/get-balance-currency', route('get-balance', ['currency'], ({ currency }) => {
   return postRequest('/api/v1/account/balance', { currency })
