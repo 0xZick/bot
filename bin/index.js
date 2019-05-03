@@ -12,7 +12,6 @@ const {
 const {
   nodeLoger,
   transfer,
-  lookupAccounts,
   generateKeyPair
 } = require('./bts')
 
@@ -66,7 +65,7 @@ app.use(cors());
 
 app.use(express.static('web'));
 
-// private
+// bts node
 
 app.get('/transfer', route('transfer', ['from', 'to', 'amount', 'asset'], (from, to, amount, asset) => {
   return transfer(from, to, amount, asset)
@@ -79,6 +78,8 @@ app.get('/update', route('update', [], () => {
 app.get('/generate', route('generate-key', [], () => {
   return generateKeyPair()
 }));
+
+// private
 
 app.get('/get-balance-currency', route('get-balance', ['currency'], ({ currency }) => {
   return postRequest('/api/v1/account/balance', { currency })
