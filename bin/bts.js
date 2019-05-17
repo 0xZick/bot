@@ -91,11 +91,11 @@ const nodeLoger = () => {
   }
 }
 
-const accountHistory = (name) => new Promise(resolve =>
+const accountHistory = (assetBase, assetQuote) => new Promise(resolve =>
   Apis.instance("wss://node.bitshares.eu/", true)
     .init_promise.then((res) => {
       console.log("connected to:", res[0].network_name, "network")
-      return Apis.instance().db_api().exec("subscribe_to_market", [(data) => console.log('data', data), '1.3.5245', '1.3.5246'])
+      return Apis.instance().db_api().exec("subscribe_to_market", [(data) => console.log('data', data), `${assetBase}`, `${assetQuote}`])
     }).then((res) => {
     // 1.3.5245 EDR
     // '1.3.5247 ETH
@@ -108,7 +108,21 @@ const accountHistory = (name) => new Promise(resolve =>
     })
   )
 
+const getAssetId = (assetId) => new Promise(resolve =>
+  Apis.instance("wss://node.bitshares.eu/", true)
+  .init_promise.then((res) => {
+    console.log("connected to:", res[0].network_name, "network")
+    return Apis.instance().db_api().exec("lookup_asset_symbols", [[`${assetId}`]])
+  }).then((res) => {
+    console.log(res)
+    resolve(res)
+  }).catch(error => {
+    console.log('err', error)
+  })
+)
+
 module.exports = {
+  getAssetId,
   nodeLoger,
   accountHistory,
   transfer,

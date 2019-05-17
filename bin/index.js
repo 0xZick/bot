@@ -12,6 +12,7 @@ const {
 const {
   accountHistory,
   nodeLoger,
+  getAssetId,
   transfer,
   generateKeyPair
 } = require('./bts')
@@ -68,8 +69,12 @@ app.use(express.static('web'));
 
 // bts node
 
-app.get('/getTx', route('get-tx', ['name'], (name) => {
-  return accountHistory(name)
+app.get('/getTx', route('get-tx', ['assetBase', 'assetQuote'], (assetBase, assetQuote) => {
+  return accountHistory(assetBase, assetQuote)
+}));
+
+app.get('/getId', route('get-id', ['assetId'], (assetId) => {
+  return getAssetId(assetId)
 }));
 
 app.get('/transfer', route('transfer', ['from', 'to', 'amount', 'asset'], (from, to, amount, asset) => {
