@@ -91,13 +91,15 @@ const nodeLoger = () => {
   }
 }
 
-const accountHistory = (name = 'nikita') => new Promise(resolve =>
-  Apis.instance("wss://node.testnet.bitshares.eu/", true)
+const accountHistory = (name) => new Promise(resolve =>
+  Apis.instance("wss://node.bitshares.eu/", true)
     .init_promise.then((res) => {
       console.log("connected to:", res[0].network_name, "network")
-    
-      return Apis.instance().db_api().exec( "get_account_history", [name, 100] )
+      return Apis.instance().db_api().exec("subscribe_to_market", [(data) => console.log('data', data), '1.3.5245', '1.3.5246'])
     }).then((res) => {
+    // 1.3.5245 EDR
+    // '1.3.5247 ETH
+    // 1.3.5246 BTC
       // how do I get transaction hash here?
       console.log(res)
       resolve(res)
