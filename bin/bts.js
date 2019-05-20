@@ -91,15 +91,16 @@ const nodeLoger = () => {
   }
 }
 
-const accountHistory = (assetBase, assetQuote) => new Promise(resolve =>
+const accountHistory = ({ assetBase, assetQuote }) => new Promise(resolve =>
   Apis.instance("wss://node.bitshares.eu/", true)
     .init_promise.then((res) => {
       console.log("connected to:", res[0].network_name, "network")
+      console.log('assetBase, assetQuote', assetBase, assetQuote)
       return Apis.instance().db_api().exec("subscribe_to_market", [(data) => console.log('data', data), `${assetBase}`, `${assetQuote}`])
     }).then((res) => {
-    // 1.3.5245 EDR
-    // '1.3.5247 ETH
-    // 1.3.5246 BTC
+    // 1.3.5245 EDR 2.3.5245
+    // 1.3.5247 ETH 2.3.5247
+    // 1.3.5246 BTC 2.3.5246
       // how do I get transaction hash here?
       console.log(res)
       resolve(res)
@@ -112,7 +113,7 @@ const getAssetId = (assetId) => new Promise(resolve =>
   Apis.instance("wss://node.bitshares.eu/", true)
   .init_promise.then((res) => {
     console.log("connected to:", res[0].network_name, "network")
-    return Apis.instance().db_api().exec("lookup_asset_symbols", [[`${assetId}`]])
+    return Apis.instance().db_api().exec("lookup_asset_symbols", [['EDINAR', 'EDINAR.ETH', 'EDINAR.BTC']])
   }).then((res) => {
     console.log(res)
     resolve(res)
