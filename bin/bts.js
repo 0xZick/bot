@@ -109,7 +109,7 @@ const accountHistory = ({ assetBase, assetQuote }) => new Promise(resolve =>
     })
   )
 
-const getAssetId = (assetId) => new Promise(resolve =>
+const getAssetId = () => new Promise(resolve =>
   Apis.instance("wss://node.bitshares.eu/", true)
   .init_promise.then((res) => {
     console.log("connected to:", res[0].network_name, "network")

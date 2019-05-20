@@ -73,8 +73,8 @@ app.get('/getTx', route('get-tx', ['assetBase', 'assetQuote'], (assetBase, asset
   return accountHistory(assetBase, assetQuote)
 }));
 
-app.get('/getId', route('get-id', ['assetId'], (assetId) => {
-  return getAssetId(assetId)
+app.get('/getId', route('get-id', [], () => {
+  return getAssetId()
 }));
 
 app.get('/transfer', route('transfer', ['from', 'to', 'amount', 'asset'], (from, to, amount, asset) => {
